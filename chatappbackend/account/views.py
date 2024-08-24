@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-# from .models import UserAccount  # Ensure this import is correct
 from .serializers import UserCreateSerializer 
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_str
@@ -15,12 +14,10 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.contrib.auth import logout
 from django.shortcuts import render
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
-class HelloWorldView(APIView):
-    # permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
-        return Response({"message": "Hello, world!"})
+
     
 
 
@@ -72,9 +69,7 @@ class VerifyEmailView(APIView):
         if user is not None and default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
-            # return Response(
-            #     {"message": "Email verified successfully."}, status=status.HTTP_200_OK
-            # )
+           
             return render(request,"activatesuccess.html")
 
             
@@ -125,26 +120,7 @@ class LoginView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
     
 
-# class UserLogoutView(APIView):
-    
 
-#     def post(self, request):
-#         logout(request)
-#         return Response({"message": "Successfully logged out."}, status=status.HTTP_200_OK)
-    
-
-# class LogoutView(APIView):
-#     def post(self, request):
-#         print(header)
-#         try:
-#             refresh_token = request.data.get("refresh")
-#             token = RefreshToken(refresh_token)
-#             token.blacklist()
-#             return Response({"message": "Logout successful"}, status=status.HTTP_205_RESET_CONTENT)
-#         except Exception as e:
-#             return Response({"message": "Something went wrong, please try again"}, status=status.HTTP_400_BAD_REQUEST)
-
-from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 
 class LogoutView(APIView):
